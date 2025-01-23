@@ -1,0 +1,47 @@
+.NavBar{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100px;
+    background-color: black;
+}
+
+.NavBar .Searchbar input{
+    border: none;
+}
+@media screen  and (min-width:780px){
+.NavBar .Searchbar input {
+  height: 40px;
+ width: 100%; 
+}
+
+.NavBar .Searchbar button{
+    height: 43px;
+}
+
+.NavBar .Searchbar{
+    display: flex;
+    height: 20px;
+    width: 500px;
+    margin-right: 90px;
+}
+    
+
+}
+
+@media screen and (max-width:790px){ 
+    .NavBar .Searchbar input {
+        height: 30px;
+        width: 300px; 
+       }
+    .NavBar .Searchbar{
+        margin-right: 20px;
+    }
+
+    .NavBar .Searchbar button{
+        height: 35px;
+    }
+    
+   
+}
+
