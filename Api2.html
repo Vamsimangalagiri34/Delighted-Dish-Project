@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meals by Category</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .meal {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .meal-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .meal-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .meal-card img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        #mealDetails {
+            margin-top: 30px;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        .ingredient-images {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .ingredient-image {
+            margin: 10px;
+            text-align: center;
+        }
+        .ingredient-image img {
+            max-width: 80px;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Meals by Category</h2>
+<label for="category">Choose a Category:</label>
+<select id="category"></select>
+<button id="fetchMeals">Fetch Meals</button>
+
+<div id="mealsContainer" class="meal-list"></div>
+
+<div id="mealDetails" class="meal"></div>
+
+<script>
+    // Fetch categories from the API and populate the category dropdown
+    fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
+        .then(response => response.json())
+        .then(data => {
+            const categorySelect = document.getElementById('category');
+            data.categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.strCategory;
+                option.textContent = category.strCategory;
+                categorySelect.appendChild(option);
+                console.log(data);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching categories:', error);
+        });
+
+    document.getElementById('fetchMeals').addEventListener('click', function () {
+        const category = document.getElementById('category').value;
+        const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const mealsContainer = document.getElementById('mealsContainer');
+                mealsContainer.innerHTML = ''; // Clear previous results
+                if (data.meals) {
+                    data.meals.forEach(meal => {
+                        mealsContainer.innerHTML += `
+                            <div class="meal-card" data-id="${meal.idMeal}">
+                                <h3>${meal.strMeal}</h3>
+                                <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                            </div>
+                        `;
+                    });
+                    // Add event listener to each meal card
+                    document.querySelectorAll('.meal-card').forEach(card => {
+                        card.addEventListener('click', function () {
+                            const mealId = this.getAttribute('data-id');
+                            fetchMealDetails(mealId);
+                        });
+                    });
+                } else {
+                    mealsContainer.innerHTML = '<p>No meals found for this category.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+
+    function fetchMealDetails(mealId) {
+        const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.meals) {
+                    const meal = data.meals[0];
+                    const mealDetailsDiv = document.getElementById('mealDetails');
+                    mealDetailsDiv.innerHTML = `
+                        <h3>${meal.strMeal}</h3>
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                        <p><strong>Category:</strong> ${meal.strCategory}</p>
+                        <p><strong>Area:</strong> ${meal.strArea}</p>
+                        <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+                        <h4>Ingredients:</h4>
+                        <ul>
+                            ${getIngredients(meal).map(ingredient => `<li>${ingredient}</li>`).join('')}
+                        </ul>
+                        <h4>Ingredient Images:</h4>
+                        <div class="ingredient-images">
+                            ${getIngredientImages(meal)}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching meal details:', error);
+            });
+    }
+
+    function getIngredients(meal) {
+        const ingredients = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = meal[`strIngredient${i}`];
+            const measure = meal[`strMeasure${i}`];
+            if (ingredient && ingredient.trim() !== '') {
+                ingredients.push(`${ingredient} - ${measure}`);
+            }
+        }
+        return ingredients;
+    }
+
+    function getIngredientImages(meal) {
+        const ingredientImages = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = meal[`strIngredient${i}`];
+            if (ingredient && ingredient.trim() !== '') {
+                const imgUrl = `https://www.themealdb.com/images/ingredients/${ingredient}.png`;
+                ingredientImages.push(`
+                    <div class="ingredient-image">
+                        <img src="${imgUrl}" alt="${ingredient}">
+                        <p>${ingredient}</p>
+                    </div>
+                `);
+            }
+        }
+        return ingredientImages.join('');
+    }
+</script>
+
+</body>
+</html>
+
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Lookup from TheMealDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .meal {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .ingredient-images {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .ingredient-image {
+            margin: 10px;
+            text-align: center;
+        }
+        .ingredient-image img {
+            max-width: 80px; /* Set size for ingredient images */
+            height: auto;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Lookup a Meal</h2>
+<label for="mealId">Enter Meal ID:</label>
+<input type="text" id="mealId" placeholder="e.g., 52772">
+<button id="lookupBtn">Lookup Meal</button>
+
+<div id="mealDetails" class="meal"></div>
+
+<script>
+    document.getElementById('lookupBtn').addEventListener('click', function () {
+        const mealId = document.getElementById('mealId').value;
+        const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Check if the meal was found
+                if (data.meals) {
+                    const meal = data.meals[0];
+                    const mealDetailsDiv = document.getElementById('mealDetails');
+                    mealDetailsDiv.innerHTML = `
+                        <h3>${meal.strMeal}</h3>
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                        <p><strong>Category:</strong> ${meal.strCategory}</p>
+                        <p><strong>Area:</strong> ${meal.strArea}</p>
+                        <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+                        <h4>Ingredients:</h4>
+                        <ul>
+                            ${getIngredients(meal).map(ingredient => `<li>${ingredient}</li>`).join('')}
+                        </ul>
+                        <h4>Ingredient Images:</h4>
+                        <div class="ingredient-images">
+                            ${getIngredientImages(meal)}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('mealDetails').innerHTML = '<p>Meal not found. Try another ID.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+
+    function getIngredients(meal) {
+        const ingredients = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = meal[`strIngredient${i}`];
+            const measure = meal[`strMeasure${i}`];
+            if (ingredient) {
+                ingredients.push(`${ingredient} - ${measure}`);
+            }
+        }
+        return ingredients;
+    }
+
+    function getIngredientImages(meal) {
+        const ingredientImages = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = meal[`strIngredient${i}`];
+            if (ingredient) {
+                const imgUrl = `https://www.themealdb.com/images/ingredients/${ingredient}.png`; // URL structure for ingredient images
+                ingredientImages.push(`
+                    <div class="ingredient-image">
+                        <img src="${imgUrl}" alt="${ingredient}">
+                        <p>${ingredient}</p>
+                    </div>
+                `);
+            }
+        }
+        return ingredientImages.join('');
+    }
+</script>
+
+</body>
+</html> -->
