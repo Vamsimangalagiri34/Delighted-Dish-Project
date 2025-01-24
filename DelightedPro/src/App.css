@@ -1,47 +1,180 @@
-.NavBar{
+.NavBar {
+    height: 250px;
+    width: 100%;
+    background-image: url('assets/blank-profile-picture-973460_1280.png'); /* Path to your image */
+    background-size: 100% auto;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    height: 100px;
-    background-color: black;
+    justify-content: center;
+    color: white;
 }
 
-.NavBar .Searchbar input{
-    border: none;
-}
-@media screen  and (min-width:780px){
-.NavBar .Searchbar input {
-  height: 40px;
- width: 100%; 
-}
-
-.NavBar .Searchbar button{
-    height: 43px;
-}
-
-.NavBar .Searchbar{
+.NavBar .heading .titles {
     display: flex;
-    height: 20px;
-    width: 500px;
-    margin-right: 90px;
-}
-    
-
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
 }
 
-@media screen and (max-width:790px){ 
-    .NavBar .Searchbar input {
-        height: 30px;
-        width: 300px; 
-       }
-    .NavBar .Searchbar{
-        margin-right: 20px;
+.NavBar .heading .subheading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.searchbar {
+    margin-top: 10px;
+    display: flex;
+    /* gap: 10px; Add spacing between input and select */
+}
+
+select, input {
+    border: none;
+    outline: none;
+    /* padding: 8px; */
+    font-size: 1rem; /* Default size */
+    border-radius: 3px; /* Rounded corners for better aesthetics */
+    background: #f8f8f8; /* Light background color */
+}
+
+/* Media query for extra small devices (phones, < 576px) */
+@media screen and (max-width: 575.98px) {
+    .NavBar .heading .titles {
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .NavBar {
+        height: 300px;
+    }
+    .subheading {
+        font-size: 18px;
+    }
+    .searchbar select {
+        width: 20%; /* Full width for small devices */
+        height: 40px;
+    }
+}
+
+/* Media query for small devices (phones, 576px and up) */
+@media screen and (min-width: 576px) and (max-width: 767.98px) {
+    .NavBar .heading .titles {
+        font-size: 44px;
+        font-weight: bold;
+    }
+    .NavBar {
+        height: 350px;
+    }
+    .subheading {
+        font-size: 28px;
+    }
+    .searchbar select {
+        width: 25%; /* Slightly reduced width */
+        height: 40px;
+    }
+}
+
+/* Media query for medium devices (tablets, 768px and up) */
+@media screen and (min-width: 768px) and (max-width: 991.98px) {
+    .NavBar .heading .titles {
+        font-size: 50px;
+        font-weight: bold;
+    }
+    .NavBar {
+        height: 400px;
+    }
+    .subheading {
+        font-size: 33px;
+    }
+    .searchbar select {
+        width: 20%; /* Balanced width for tablets */
+        height: 45px;
+    }
+}
+
+/* Media query for large devices (desktops, 992px and up) */
+@media screen and (min-width: 992px) and (max-width: 1199.98px) {
+    .NavBar .heading .titles {
+        font-size: 59px;
+        font-weight: bold;
+    }
+    .NavBar {
+        height: 450px;
+    }
+    .subheading {
+        font-size: 36px;
+    }
+    .searchbar select {
+        width: 25%; /* Half width for desktops */
+        height: 50px;
+    }
+    .searchbar input{
+        width: 40%;
+    }
+}
+
+/* Media query for extra large devices (1200px and up) */
+@media screen and (min-width: 1200px) {
+    .NavBar .heading .titles {
+        font-size: 61px;
+        font-weight: bold;
+    }
+    .NavBar {
+        height: 500px;
+    }
+    .subheading {
+        font-size: 38px;
+    }
+    .searchbar select {
+        width: 20%; /* Smaller width for large desktops */
+        height: 55px;
     }
 
-    .NavBar .Searchbar button{
-        height: 35px;
+    .searchbar input{
+        width: 79%;
     }
-    
-   
 }
 
+/* Media query for 4K screens (2560px and up) */
+@media screen and (min-width: 2560px) {
+    .NavBar .heading .titles {
+        font-size: 80px;
+        font-weight: bold;
+    }
+    .NavBar {
+        height: 600px;
+    }
+    .subheading {
+        font-size: 48px;
+    }
+    .searchbar select {
+        width: 20%; /* Narrower width for ultra-wide screens */
+        height: 60px;
+    }
+    .searchbar input{
+        width: 300px;
+    }
+}
+
+
+
+
+
+.searchbar input{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-left: 2px;
+}
+.searchbar button{
+    border: none;
+    outline: none;
+    margin-left: 0px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    cursor: pointer;
+}
+ body{
+    /* background-color: black; */
+ }
