@@ -1,48 +1,54 @@
-import React, { Fragment, useRef, useEffect, useState } from 'react';
-import './App.css';
-import Recipes from './Recipes';
+import React, { Fragment, useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./App.css";
 
 function NavBar() {
   const titles = useRef();
-  const [data, setData] = useState([]); // State to store fetched data
-  const [options, setOptions] = useState([]); // State to store options
-  const [meal, setMeals] = useState(null); // State to store selected meal category URL
+  const [data, setData] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [meal, setMeal] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    titles.current.textContent = "Meal Categories";
+    titles.current.textContent = "xxxxxxx";
 
-    // Fetch categories from API
-    fetch('https://www.themealdb.com/api/json/v1/1/categories.php')
-      .then(response => response.json())
-      .then(response => {
-        setData(response.categories); // Store API response
-      })
-      .catch(error => console.error("Error fetching categories:", error));
+    const getData = () => {
+      fetch("https://www.themealdb.com/api/json/v1/1/categories.php")
+        .then((response) => response.json())
+        .then((response) => {
+          setData(response.categories);
+        })
+        .catch((er) => console.log(er));
+    };
+
+    getData();
   }, []);
 
   useEffect(() => {
-    const tempOptions = [
-      <option value="" key="default">Select a category</option>, // Placeholder option
-    ];
-
-    data.forEach((category, index) => {
+    const tempOptions = [];
+    tempOptions.push(
+      <option value="null" key="default">
+        {" "}
+      </option>
+    );
+    data.forEach((ele, index) => {
       tempOptions.push(
         <option
-          value={`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category.strCategory}`}
+          value={`https://www.themealdb.com/api/json/v1/1/filter.php?c=${ele.strCategory}`}
           key={index}
         >
-          {category.strCategory}
+          {ele.strCategory}
         </option>
       );
     });
 
-    setOptions(tempOptions); // Update options state
+    setOptions(tempOptions);
   }, [data]);
 
   const selectCat = (e) => {
-    const selectedValue = e.target.value;
-    console.log("Selected Category URL:", selectedValue);
-    setMeals(selectedValue); // Update selected meal URL
+    const selectedMeal = e.target.value;
+    setMeal(selectedMeal);
+    navigate("/recipes", { state: { mealUrl: selectedMeal } }); // Navigate with state
   };
 
   return (
@@ -50,19 +56,16 @@ function NavBar() {
       <div className="NavBar">
         <div className="heading">
           <div className="titles" ref={titles}></div>
-          <div className="subheading">
-            Explore delicious recipes by category
-          </div>
+          <div className="subheading">find your dish and make it yourself 🍽️ </div>
           <div className="searchbar">
             <select name="menu" id="categories" onChange={selectCat}>
               {options.length > 0 ? options : <option disabled>Loading...</option>}
             </select>
-            <input type="text" placeholder="Search" />
-            <button type="submit">Search</button>
+            <input type="text" placeholder="search" />{" "}
+            <button >search</button>
           </div>
         </div>
       </div>
-      {meal && <Recipes categoryUrl={meal} />} {/* Conditionally render Recipes */}
     </Fragment>
   );
 }

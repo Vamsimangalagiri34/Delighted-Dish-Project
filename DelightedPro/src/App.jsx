@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import NavBar from './NavBar'
-import Body from './Body'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import NavBar from './NavBar';
+import Recipes from './Recipes';
+import RecipeDetails from './RecipeDetails';  // Assuming you create this component later
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-     <NavBar/>
-     <Body/>
-
-    </>
-  )
+    <Router>
+      <NavBar />  {/* NavBar will be displayed on all pages */}
+      <Routes>
+        {/* <Route path="/" element={<Home />} /> You can create a Home component */}
+        <Route path="/recipes" element={<Recipes />} />
+        <Route path='/recipe-details' element ={<RecipeDetails/>} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

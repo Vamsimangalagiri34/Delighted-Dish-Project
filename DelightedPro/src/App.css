@@ -1,7 +1,7 @@
 .NavBar {
     height: 250px;
     width: 100%;
-    background-image: url('assets/blank-profile-picture-973460_1280.png'); /* Path to your image */
+    background-image: url('assets\wmremove-transformed.jpeg'); /* Path to your image */
     background-size: 100% auto;
     background-position: center;
     background-repeat: no-repeat;
@@ -178,3 +178,35 @@ select, input {
  body{
     /* background-color: black; */
  }
+
+ /* Skeleton Loader CSS */
+.skeleton-card {
+    background-color: #f0f0f0;
+    width: 100%;
+    height: 250px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    animation: skeleton-loading 1.2s infinite ease-in-out;
+  }
+  
+  .skeleton-text {
+    background-color: #f0f0f0;
+    height: 20px;
+    width: 60%;
+    margin: 10px auto;
+    border-radius: 4px;
+    animation: skeleton-loading 1.2s infinite ease-in-out;
+  }
+  
+  @keyframes skeleton-loading {
+    0% {
+      background-color: #f0f0f0;
+    }
+    50% {
+      background-color: #e0e0e0;
+    }
+    100% {
+      background-color: #f0f0f0;
+    }
+  }
+  

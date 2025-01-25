@@ -129,6 +129,7 @@
             .then(data => {
                 if (data.meals) {
                     const meal = data.meals[0];
+                    console.log(meal)
                     const mealDetailsDiv = document.getElementById('mealDetails');
                     mealDetailsDiv.innerHTML = `
                         <h3>${meal.strMeal}</h3>
